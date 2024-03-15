@@ -11,6 +11,8 @@ namespace MySOASolution.BLL.Profiles
             CreateMap<Samurai, SamuraiDTO>().ReverseMap();
             CreateMap<SamuraiCreateDTO, Samurai>();
             CreateMap<SamuraiUpdateDTO, Samurai>();
+
+            CreateMap<Quote, QuoteDTO>().ReverseMap();
         }
     }
 }

@@ -1,11 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using MySOASolution.Domain;
 
 namespace MySOASolution.Data
 {
     public class SamuraiContext : DbContext
     {
+        public SamuraiContext(DbContextOptions<SamuraiContext> options) : base(options)
+        {
+
+        }
+
         public DbSet<Samurai> Samurais { get; set; }
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Battle> Battles { get; set; }
@@ -19,12 +23,12 @@ namespace MySOASolution.Data
                 bs => bs.HasOne<Samurai>().WithMany()).Property(bs => bs.DateJoined).HasDefaultValueSql("getdate()");
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
                 .UseSqlServer("Data Source=ACTUAL;Initial Catalog=SamuraiDb;Integrated Security=True;TrustServerCertificate=True;")
                 .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
                 .EnableSensitiveDataLogging();
-        }
+        }*/
     }
 }

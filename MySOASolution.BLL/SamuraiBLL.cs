@@ -2,6 +2,7 @@
 using MySOASolution.BLL.DTOs;
 using MySOASolution.BLL.Interface;
 using MySOASolution.Data.DAL.Interface;
+using MySOASolution.Domain;
 
 namespace MySOASolution.BLL
 {
@@ -16,14 +17,35 @@ namespace MySOASolution.BLL
             _mapper = mapper;
         }
 
-        public Task<SamuraiDTO> CreateAsync(SamuraiCreateDTO samuraiCreateDTO)
+        public async Task<SamuraiDTO> CreateAsync(SamuraiCreateDTO samuraiCreateDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var samurai = _mapper.Map<Samurai>(samuraiCreateDTO);
+                var createdSamurai = await _samurai.CreateAsync(samurai);
+                return _mapper.Map<SamuraiDTO>(createdSamurai);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var samurai = _samurai.ReadAsync(id);
+                if (samurai == null)
+                {
+                    throw new ArgumentException("Samurai not found");
+                }
+                return await _samurai.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
         public async Task<IEnumerable<SamuraiDTO>> ReadAsync()
@@ -32,14 +54,35 @@ namespace MySOASolution.BLL
             return _mapper.Map<IEnumerable<SamuraiDTO>>(samurais);
         }
 
-        public Task<SamuraiDTO> ReadAsync(int id)
+        public async Task<SamuraiDTO> ReadAsync(int id)
         {
-            throw new NotImplementedException();
+            var samurai = await _samurai.ReadAsync(id);
+            return _mapper.Map<SamuraiDTO>(samurai);
         }
 
-        public Task<SamuraiDTO> UpdateAsync(int id, SamuraiUpdateDTO samuraiUpdateDTO)
+        public async Task<IEnumerable<SamuraiDTO>> ReadWithQuotesAsync()
         {
-            throw new NotImplementedException();
+            var samurais = await _samurai.ReadWithQuotesAsync();
+            return _mapper.Map<IEnumerable<SamuraiDTO>>(samurais);
+        }
+
+        public async Task<SamuraiDTO> UpdateAsync(int id, SamuraiUpdateDTO samuraiUpdateDTO)
+        {
+            try
+            {
+                var samurai = _samurai.ReadAsync(id);
+                if (samurai == null)
+                {
+                    throw new ArgumentException("Samurai not found");
+                }
+                var updateSamurai = _mapper.Map<Samurai>(samuraiUpdateDTO);
+                var updatedSamurai = await _samurai.UpdateAsync(updateSamurai);
+                return _mapper.Map<SamuraiDTO>(updatedSamurai);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
