@@ -26,9 +26,21 @@ namespace MyBackendServices.Controllers
 
         // GET api/<SamuraisController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            var samurai = await _samuraiBLL.ReadAsync(id);
+            if (samurai == null)
+            {
+                return NotFound();
+            }
+            return Ok(samurai);
+        }
+
+        [HttpGet("withquotes")]
+        public async Task<IEnumerable<SamuraiDTO>> GetWithQuotes()
+        {
+            var samurais = await _samuraiBLL.ReadWithQuotesAsync();
+            return samurais;
         }
 
         // POST api/<SamuraisController>
