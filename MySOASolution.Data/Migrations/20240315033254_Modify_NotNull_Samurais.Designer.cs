@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MySOASolution.Data;
 
@@ -10,9 +11,11 @@ using MySOASolution.Data;
 namespace MySOASolution.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20240315033254_Modify_NotNull_Samurais")]
+    partial class Modify_NotNull_Samurais
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
