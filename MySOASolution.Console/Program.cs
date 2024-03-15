@@ -31,7 +31,12 @@ GetSamuraiByName("TO");*/
 //InsertSamuraiWithQuotes();
 //GetAllQuotesWithSamurai();
 
-GetSamuraiByID(1);
+//GetSamuraiByID(1);
+//AddBattle();
+//AddSamuraiToBattle();
+//InsertSamuraiWithHorse();
+AddHorseToSamurai();
+GetSamuraisWithBattles();
 
 void GetAllQuotesWithSamurai()
 {
@@ -41,6 +46,66 @@ void GetAllQuotesWithSamurai()
         Console.WriteLine($"{quote.Text} - {quote.Samurai.Name}");
     }
 }
+
+void AddHorseToSamurai()
+{
+    var samurai = _context.Samurais.SingleOrDefault(s => s.SamuraiId == 1);
+    samurai.Horse = new Horse { Name = "Naruto" };
+
+    _context.SaveChanges();
+}
+
+void GetSamuraisWithBattles()
+{
+    var samurais = _context.Samurais.Include(s => s.Battles).Include(s => s.Horse);
+    foreach (var samurai in samurais)
+    {
+        Console.WriteLine($"{samurai.Name} :");
+        if (samurai.Horse != null)
+        {
+            Console.WriteLine($"Horse: {samurai.Horse.Name}");
+        }
+        foreach (var battle in samurai.Battles)
+        {
+            Console.WriteLine($"{battle.Name} ");
+        }
+        Console.WriteLine("------------------------");
+    }
+}
+
+void AddBattle()
+{
+    _context.AddRange(
+               new Battle { Name = "Battle of Okehazama" },
+               new Battle { Name = "Battle of Sekigahara" },
+               new Samurai { Name = "Inosuke" });
+    _context.SaveChanges();
+    Console.WriteLine("Battle and Samurai added");
+}
+
+void AddSamuraiToBattle()
+{
+    var battle = _context.Battles.SingleOrDefault(b => b.BattleId == 1);
+    var samurai1 = _context.Samurais.SingleOrDefault(s => s.SamuraiId == 1);
+    var samurai2 = _context.Samurais.SingleOrDefault(s => s.SamuraiId == 2);
+
+    battle.Samurais = new List<Samurai> { samurai1, samurai2 };
+    _context.SaveChanges();
+}
+
+void InsertSamuraiWithHorse()
+{
+    var samurai = new Samurai
+    {
+        Name = "Kambei Shimada",
+        Horse = new Horse { Name = "Red Hare" }
+    };
+    _context.Samurais.Add(samurai);
+    _context.SaveChanges();
+    Console.WriteLine("Samurai with horse added");
+}
+
+
 
 void InsertSamuraiWithQuotes()
 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MySOASolution.Domain;
 
 namespace MySOASolution.Data
@@ -20,7 +21,10 @@ namespace MySOASolution.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=ACTUAL;Initial Catalog=SamuraiDb;Integrated Security=True;TrustServerCertificate=True;");
+            optionsBuilder
+                .UseSqlServer("Data Source=ACTUAL;Initial Catalog=SamuraiDb;Integrated Security=True;TrustServerCertificate=True;")
+                .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
+                .EnableSensitiveDataLogging();
         }
     }
 }

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySOASolution.Console", "My
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySOASolution.Data", "MySOASolution.Data\MySOASolution.Data.csproj", "{2ECA6E90-06B7-43F0-92DF-E262D27BB4AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySOASolution.BLL", "MySOASolution.BLL\MySOASolution.BLL.csproj", "{D4AC4BC0-DEB5-44D1-A089-9EA994C2A44E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2ECA6E90-06B7-43F0-92DF-E262D27BB4AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ECA6E90-06B7-43F0-92DF-E262D27BB4AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ECA6E90-06B7-43F0-92DF-E262D27BB4AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4AC4BC0-DEB5-44D1-A089-9EA994C2A44E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4AC4BC0-DEB5-44D1-A089-9EA994C2A44E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4AC4BC0-DEB5-44D1-A089-9EA994C2A44E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4AC4BC0-DEB5-44D1-A089-9EA994C2A44E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
