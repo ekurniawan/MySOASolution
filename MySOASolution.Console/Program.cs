@@ -29,7 +29,9 @@ GetSamuraiByName("TO");*/
 //InsertQuote(1, "Accept everything just the way it is");
 //InsertQuote(1, "Think lightly of yourself and deeply of the world");
 //InsertSamuraiWithQuotes();
-GetAllQuotesWithSamurai();
+//GetAllQuotesWithSamurai();
+
+GetSamuraiByID(1);
 
 void GetAllQuotesWithSamurai()
 {
@@ -108,7 +110,15 @@ void GetSamuraiByID(int id)
         Console.WriteLine("Samurai not found");
         return;
     }
+
+    var quotes = _context.Quotes.Where(q => q.SamuraiId == id);
+    samurai.Quotes = quotes.ToList();
+
     Console.WriteLine(samurai.Name);
+    foreach (var quote in samurai.Quotes)
+    {
+        Console.WriteLine(quote.Text);
+    }
 }
 
 void GetSamuraiByName(string name)

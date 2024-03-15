@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MySOASolution.Data;
 
@@ -11,9 +12,11 @@ using MySOASolution.Data;
 namespace MySOASolution.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20240315040940_Add_Table_Battle")]
+    partial class Add_Table_Battle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,28 +59,6 @@ namespace MySOASolution.Data.Migrations
                     b.HasIndex("SamuraiId");
 
                     b.ToTable("BattleSamurai");
-                });
-
-            modelBuilder.Entity("MySOASolution.Domain.Horse", b =>
-                {
-                    b.Property<int>("HorseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HorseId"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SamuraiId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HorseId");
-
-                    b.HasIndex("SamuraiId")
-                        .IsUnique();
-
-                    b.ToTable("Horse");
                 });
 
             modelBuilder.Entity("MySOASolution.Domain.Quote", b =>
@@ -137,15 +118,6 @@ namespace MySOASolution.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MySOASolution.Domain.Horse", b =>
-                {
-                    b.HasOne("MySOASolution.Domain.Samurai", null)
-                        .WithOne("Horse")
-                        .HasForeignKey("MySOASolution.Domain.Horse", "SamuraiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MySOASolution.Domain.Quote", b =>
                 {
                     b.HasOne("MySOASolution.Domain.Samurai", "Samurai")
@@ -159,8 +131,6 @@ namespace MySOASolution.Data.Migrations
 
             modelBuilder.Entity("MySOASolution.Domain.Samurai", b =>
                 {
-                    b.Navigation("Horse");
-
                     b.Navigation("Quotes");
                 });
 #pragma warning restore 612, 618

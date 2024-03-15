@@ -16,5 +16,9 @@ namespace MySOASolution.Domain
         public string Origin { get; set; } = string.Empty;
 
         public IEnumerable<Quote>? Quotes { get; set; }
+
+        public IEnumerable<Battle>? Battles { get; set; }
+
+        public Horse? Horse { get; set; }
     }
 }
