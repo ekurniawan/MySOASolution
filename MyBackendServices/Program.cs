@@ -1,7 +1,7 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MySOASolution.BLL;
-using MySOASolution.BLL.DTOs;
+using MySOASolution.BLL.DTOs.Validation;
 using MySOASolution.BLL.Interface;
 using MySOASolution.Data;
 using MySOASolution.Data.DAL;
@@ -16,13 +16,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//fluent validation
-builder.Services.AddScoped<IValidator<SamuraiCreateDTO>, SamuraiCreateDTOValidation>();
-builder.Services.AddScoped<IValidator<SamuraiUpdateDTO>, SamuraiUpdateDTOValidation>();
-
-
-builder.Services.AddScoped<ISamurai, SamuraiDal>();
+//DI 
 builder.Services.AddScoped<ISamuraiBLL, SamuraiBLL>();
+builder.Services.AddScoped<ISamurai, SamuraiDal>();
+builder.Services.AddScoped<IQuote, QuoteDal>();
+builder.Services.AddScoped<IQuoteBLL, QuoteBLL>();
+
+//fluent validation
+//builder.Services.AddScoped<IValidator<SamuraiCreateDTO>, SamuraiCreateDTOValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<SamuraiCreateDTOValidation>();
+
 
 //automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

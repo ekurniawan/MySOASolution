@@ -12,14 +12,14 @@ namespace MyBackendServices.Controllers
     public class SamuraisController : ControllerBase
     {
         private readonly ISamuraiBLL _samuraiBLL;
-        private readonly IValidator<SamuraiCreateDTO> _validator;
+        private readonly IValidator<SamuraiCreateDTO> _validatorSamuraiCreate;
         private readonly IValidator<SamuraiUpdateDTO> _validatorSamuraiUpdate;
 
-        public SamuraisController(ISamuraiBLL samuraiBLL, IValidator<SamuraiCreateDTO> validator,
+        public SamuraisController(ISamuraiBLL samuraiBLL, IValidator<SamuraiCreateDTO> validatorSamuraiCreate,
             IValidator<SamuraiUpdateDTO> validatorSamuraiUpdate)
         {
             _samuraiBLL = samuraiBLL;
-            _validator = validator;
+            _validatorSamuraiCreate = validatorSamuraiCreate;
             _validatorSamuraiUpdate = validatorSamuraiUpdate;
         }
 
@@ -44,7 +44,7 @@ namespace MyBackendServices.Controllers
         }
 
         [HttpGet("withquotes")]
-        public async Task<IEnumerable<SamuraiDTO>> GetWithQuotes()
+        public async Task<IEnumerable<SamuraiWithQuotesDTO>> GetWithQuotes()
         {
             var samurais = await _samuraiBLL.ReadWithQuotesAsync();
             return samurais;
@@ -56,7 +56,7 @@ namespace MyBackendServices.Controllers
         {
             try
             {
-                var validatorResult = await _validator.ValidateAsync(samuraiCreateDTO);
+                var validatorResult = await _validatorSamuraiCreate.ValidateAsync(samuraiCreateDTO);
                 if (!validatorResult.IsValid)
                 {
                     Helpers.Extensions.AddToModelState(validatorResult, ModelState);

@@ -68,7 +68,7 @@ namespace MySOASolution.Data.DAL
 
         public async Task<Quote> ReadAsync(int id)
         {
-            var quote = await _context.Quotes.FirstOrDefaultAsync(q => q.QuoteId == id);
+            var quote = await _context.Quotes.Include(q => q.Samurai).FirstOrDefaultAsync(q => q.QuoteId == id);
             if (quote == null)
             {
                 throw new ArgumentException("Quote not found");

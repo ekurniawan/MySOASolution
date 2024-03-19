@@ -60,10 +60,10 @@ namespace MySOASolution.BLL
             return _mapper.Map<SamuraiDTO>(samurai);
         }
 
-        public async Task<IEnumerable<SamuraiDTO>> ReadWithQuotesAsync()
+        public async Task<IEnumerable<SamuraiWithQuotesDTO>> ReadWithQuotesAsync()
         {
             var samurais = await _samurai.ReadWithQuotesAsync();
-            return _mapper.Map<IEnumerable<SamuraiDTO>>(samurais);
+            return _mapper.Map<IEnumerable<SamuraiWithQuotesDTO>>(samurais);
         }
 
         public async Task<SamuraiDTO> UpdateAsync(int id, SamuraiUpdateDTO samuraiUpdateDTO)

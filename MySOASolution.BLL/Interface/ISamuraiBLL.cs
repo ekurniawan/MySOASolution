@@ -9,6 +9,6 @@ namespace MySOASolution.BLL.Interface
         Task<SamuraiDTO> CreateAsync(SamuraiCreateDTO samuraiCreateDTO);
         Task<SamuraiDTO> UpdateAsync(int id, SamuraiUpdateDTO samuraiUpdateDTO);
         Task<bool> DeleteAsync(int id);
-        Task<IEnumerable<SamuraiDTO>> ReadWithQuotesAsync();
+        Task<IEnumerable<SamuraiWithQuotesDTO>> ReadWithQuotesAsync();
     }
 }
