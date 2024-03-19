@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using MySOASolution.BLL.DTOs;
 using MySOASolution.BLL.Interface;
 
@@ -11,9 +12,15 @@ namespace MyBackendServices.Controllers
     public class SamuraisController : ControllerBase
     {
         private readonly ISamuraiBLL _samuraiBLL;
-        public SamuraisController(ISamuraiBLL samuraiBLL)
+        private readonly IValidator<SamuraiCreateDTO> _validator;
+        private readonly IValidator<SamuraiUpdateDTO> _validatorSamuraiUpdate;
+
+        public SamuraisController(ISamuraiBLL samuraiBLL, IValidator<SamuraiCreateDTO> validator,
+            IValidator<SamuraiUpdateDTO> validatorSamuraiUpdate)
         {
             _samuraiBLL = samuraiBLL;
+            _validator = validator;
+            _validatorSamuraiUpdate = validatorSamuraiUpdate;
         }
 
         // GET: api/<SamuraisController>
@@ -45,20 +52,68 @@ namespace MyBackendServices.Controllers
 
         // POST api/<SamuraisController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post(SamuraiCreateDTO samuraiCreateDTO)
         {
+            try
+            {
+                var validatorResult = await _validator.ValidateAsync(samuraiCreateDTO);
+                if (!validatorResult.IsValid)
+                {
+                    Helpers.Extensions.AddToModelState(validatorResult, ModelState);
+                    return BadRequest(ModelState);
+                }
+                var result = await _samuraiBLL.CreateAsync(samuraiCreateDTO);
+                return CreatedAtAction(nameof(Get), new { id = result.SamuraiId }, result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/<SamuraisController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, SamuraiUpdateDTO samuraiUpdateDTO)
         {
+            try
+            {
+                var validatorResult = await _validatorSamuraiUpdate.ValidateAsync(samuraiUpdateDTO);
+                if (!validatorResult.IsValid)
+                {
+                    Helpers.Extensions.AddToModelState(validatorResult, ModelState);
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _samuraiBLL.UpdateAsync(id, samuraiUpdateDTO);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE api/<SamuraisController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                var result = await _samuraiBLL.DeleteAsync(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

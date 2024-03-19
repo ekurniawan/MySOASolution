@@ -35,7 +35,7 @@ namespace MySOASolution.BLL
         {
             try
             {
-                var samurai = _samurai.ReadAsync(id);
+                var samurai = await _samurai.ReadAsync(id);
                 if (samurai == null)
                 {
                     throw new ArgumentException("Samurai not found");
@@ -70,13 +70,13 @@ namespace MySOASolution.BLL
         {
             try
             {
-                var samurai = _samurai.ReadAsync(id);
+                var samurai = await _samurai.ReadAsync(id);
                 if (samurai == null)
                 {
                     throw new ArgumentException("Samurai not found");
                 }
                 var updateSamurai = _mapper.Map<Samurai>(samuraiUpdateDTO);
-                var updatedSamurai = await _samurai.UpdateAsync(updateSamurai);
+                var updatedSamurai = await _samurai.UpdateAsync(id, updateSamurai);
                 return _mapper.Map<SamuraiDTO>(updatedSamurai);
             }
             catch (Exception ex)

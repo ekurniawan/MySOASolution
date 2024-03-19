@@ -1,5 +1,7 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MySOASolution.BLL;
+using MySOASolution.BLL.DTOs;
 using MySOASolution.BLL.Interface;
 using MySOASolution.Data;
 using MySOASolution.Data.DAL;
@@ -13,6 +15,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//fluent validation
+builder.Services.AddScoped<IValidator<SamuraiCreateDTO>, SamuraiCreateDTOValidation>();
+builder.Services.AddScoped<IValidator<SamuraiUpdateDTO>, SamuraiUpdateDTOValidation>();
+
 
 builder.Services.AddScoped<ISamurai, SamuraiDal>();
 builder.Services.AddScoped<ISamuraiBLL, SamuraiBLL>();
