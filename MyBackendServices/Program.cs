@@ -1,11 +1,15 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MyBackendServices.Helpers;
 using MySOASolution.BLL;
 using MySOASolution.BLL.DTOs.Validation;
 using MySOASolution.BLL.Interface;
 using MySOASolution.Data;
 using MySOASolution.Data.DAL;
 using MySOASolution.Data.DAL.Interface;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +34,29 @@ builder.Services.AddValidatorsFromAssemblyContaining<SamuraiCreateDTOValidation>
 //automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+//jwt token
+var appSettingsSection = builder.Configuration.GetSection("AppSettings");
+builder.Services.Configure<AppSettings>(appSettingsSection);
+var appSettings = appSettingsSection.Get<AppSettings>();
+var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = true;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
 //ef core
 builder.Services.AddDbContext<SamuraiContext>(options =>
 {
@@ -47,6 +74,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

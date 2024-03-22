@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySOASolution.BLL.DTOs;
 using MySOASolution.BLL.Interface;
@@ -7,6 +8,7 @@ using MySOASolution.BLL.Interface;
 
 namespace MyBackendServices.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SamuraisController : ControllerBase
