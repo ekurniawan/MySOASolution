@@ -1,0 +1,7 @@
+﻿namespace MyBackendServices.Helpers
+{
+    public class AppSettings
+    {
+        public string? Secret { get; set; }
+    }
+}
