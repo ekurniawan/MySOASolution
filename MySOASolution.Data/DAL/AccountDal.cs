@@ -7,17 +7,44 @@ namespace MySOASolution.Data.DAL
     public class AccountDal : IAccount
     {
         private readonly UserManager<AppIdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SamuraiContext _context;
 
-        public AccountDal(UserManager<AppIdentityUser> userManager, SamuraiContext context)
+        public AccountDal(UserManager<AppIdentityUser> userManager,
+           RoleManager<IdentityRole> roleManager, SamuraiContext context)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _context = context;
         }
 
-        public Task<Task> AddRole(string role)
+        public async Task<Task> AddRole(string role)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //add role
+                var roleExist = await _roleManager.RoleExistsAsync(role);
+                if (!roleExist)
+                {
+                    var result = await _roleManager.CreateAsync(new IdentityRole(role));
+                    if (result.Succeeded)
+                    {
+                        return Task.CompletedTask;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Role creation failed");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Role already exists");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
         public Task<Task> AddUserToRole(string username, string role)

@@ -38,6 +38,20 @@ namespace MyBackendServices.Controllers
             }
         }
 
+        [HttpPost("role")]
+        public async Task<IActionResult> AddRole(RoleCreateDTO roleCreateDTO)
+        {
+            try
+            {
+                await _accountBLL.AddRole(roleCreateDTO);
+                return Ok("Role created successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
