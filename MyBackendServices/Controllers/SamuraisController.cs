@@ -8,7 +8,7 @@ using MySOASolution.BLL.Interface;
 
 namespace MyBackendServices.Controllers
 {
-    [Authorize]
+
     [Route("api/[controller]")]
     [ApiController]
     public class SamuraisController : ControllerBase
@@ -26,6 +26,7 @@ namespace MyBackendServices.Controllers
         }
 
         // GET: api/<SamuraisController>
+        [Authorize(Roles = "reader,contributor,admin")]
         [HttpGet]
         public async Task<IEnumerable<SamuraiDTO>> Get()
         {
@@ -34,6 +35,7 @@ namespace MyBackendServices.Controllers
         }
 
         // GET api/<SamuraisController>/5
+        [Authorize(Roles = "reader,contributor,admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -53,6 +55,7 @@ namespace MyBackendServices.Controllers
         }
 
         // POST api/<SamuraisController>
+        [Authorize(Roles = "contributor")]
         [HttpPost]
         public async Task<IActionResult> Post(SamuraiCreateDTO samuraiCreateDTO)
         {

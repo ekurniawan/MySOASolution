@@ -26,6 +26,7 @@ namespace MyBackendServices.Controllers
             {
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, loginViewModel.Username));
+
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
