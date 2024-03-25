@@ -6,6 +6,7 @@
         Task<AppIdentityUser> GetUser(string username);
         Task<Task> AddRole(string role);
         Task<Task> AddUserToRole(string username, string role);
+        Task<IEnumerable<string>> GetRolesFromUser(string username);
 
         Task<bool> Login(string username, string password);
     }

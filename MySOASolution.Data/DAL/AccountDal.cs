@@ -47,9 +47,51 @@ namespace MySOASolution.Data.DAL
             }
         }
 
-        public Task<Task> AddUserToRole(string username, string role)
+        public async Task<Task> AddUserToRole(string username, string role)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //add user to role
+                var user = await _userManager.FindByNameAsync(username);
+                if (user != null)
+                {
+                    var roleExist = await _roleManager.RoleExistsAsync(role);
+                    if (!roleExist)
+                    {
+                        throw new ArgumentException("Role not found");
+                    }
+
+                    var result = await _userManager.AddToRoleAsync(user, role);
+                    if (result.Succeeded)
+                    {
+                        return Task.CompletedTask;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("User role creation failed");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("User not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        public async Task<IEnumerable<string>> GetRolesFromUser(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user != null)
+            {
+                //get roles
+                var roles = await _userManager.GetRolesAsync(user);
+                return roles;
+            }
+            throw new ArgumentException("User not found");
         }
 
         public async Task<AppIdentityUser> GetUser(string username)

@@ -52,6 +52,20 @@ namespace MyBackendServices.Controllers
             }
         }
 
+        [HttpPost("userrole")]
+        public async Task<IActionResult> AddUserToRole(UserRoleDTO userRoleDTO)
+        {
+            try
+            {
+                await _accountBLL.AddUserToRole(userRoleDTO);
+                return Ok("User added to role successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
@@ -61,6 +75,12 @@ namespace MyBackendServices.Controllers
                 var accountDto = await _accountBLL.Login(loginDTO);
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, accountDto.Username));
+                var roles = await _accountBLL.GetRolesFromUser(accountDto.Username);
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
