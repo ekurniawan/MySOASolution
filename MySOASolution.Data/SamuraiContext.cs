@@ -22,7 +22,6 @@ namespace MySOASolution.Data
             modelBuilder.Entity<Samurai>().HasMany(s => s.Battles).WithMany(b => b.Samurais)
                 .UsingEntity<BattleSamurai>(bs => bs.HasOne<Battle>().WithMany(),
                 bs => bs.HasOne<Samurai>().WithMany()).Property(bs => bs.DateJoined).HasDefaultValueSql("getdate()");
-
             //custom IdentityUser
         }
 

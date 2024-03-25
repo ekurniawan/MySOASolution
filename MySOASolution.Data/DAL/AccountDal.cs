@@ -25,9 +25,15 @@ namespace MySOASolution.Data.DAL
             throw new NotImplementedException();
         }
 
-        public Task<bool> Login(string username, string password)
+        public async Task<bool> Login(string username, string password)
         {
-            throw new NotImplementedException();
+            //user login
+            var user = await _userManager.FindByNameAsync(username);
+            if (user != null && await _userManager.CheckPasswordAsync(user, password))
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<Task> Register(AppIdentityUser appIdentityUser, string password)
