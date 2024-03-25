@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyBackendServices.Helpers;
 using MyBackendServices.ViewModels;
+using MySOASolution.BLL.DTOs;
+using MySOASolution.BLL.Interface;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,19 +16,37 @@ namespace MyBackendServices.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly AppSettings _appSettings;
-        public AccountsController(IOptions<AppSettings> appSettings)
+        private readonly IAccountBLL _accountBLL;
+
+        public AccountsController(IOptions<AppSettings> appSettings, IAccountBLL accountBLL)
         {
             _appSettings = appSettings.Value;
+            _accountBLL = accountBLL;
         }
 
-        [HttpPost("login")]
-        public IActionResult Login(LoginViewModel loginViewModel)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(AccountCreateDTO accountCreateDTO)
         {
-            if (loginViewModel.Username == "erick" && loginViewModel.Password == "artech")
+            try
             {
-                List<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.Name, loginViewModel.Username));
+                await _accountBLL.Register(accountCreateDTO);
+                return Ok("User created successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
+        {
+            try
+            {
+                var accountDto = await _accountBLL.Login(loginDTO);
+                List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.Name, accountDto.Username));
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -34,20 +54,24 @@ namespace MyBackendServices.Controllers
                     Subject = new ClaimsIdentity(claims),
                     Expires = DateTime.Now.AddHours(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                        SecurityAlgorithms.HmacSha256Signature)
+                   SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var userWithToken = new UserWithToken
                 {
-                    Username = loginViewModel.Username,
-                    Password = loginViewModel.Password,
+                    Username = accountDto.Username,
+                    Email = accountDto.Email,
+                    PhoneNumber = accountDto.PhoneNumber,
+                    Firstname = accountDto.Firstname,
+                    Lastname = accountDto.Lastname,
+                    Address = accountDto.Address,
                     Token = tokenHandler.WriteToken(token)
                 };
                 return Ok(userWithToken);
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Invalid credentials");
+                return BadRequest(ex.Message);
             }
         }
     }

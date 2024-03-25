@@ -3,6 +3,7 @@
     public interface IAccount
     {
         Task<Task> Register(AppIdentityUser appIdentityUser, string password);
+        Task<AppIdentityUser> GetUser(string username);
         Task<Task> AddRole(string role);
         Task<Task> AddUserToRole(string username, string role);
 

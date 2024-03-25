@@ -25,6 +25,17 @@ namespace MySOASolution.Data.DAL
             throw new NotImplementedException();
         }
 
+        public async Task<AppIdentityUser> GetUser(string username)
+        {
+            //get user
+            var user = await _userManager.FindByNameAsync(username);
+            if (user != null)
+            {
+                return user;
+            }
+            throw new ArgumentException("User not found");
+        }
+
         public async Task<bool> Login(string username, string password)
         {
             //user login
