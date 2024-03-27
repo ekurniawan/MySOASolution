@@ -66,16 +66,34 @@ namespace MyBackendServices.Controllers
             }
         }
 
+        [HttpPost("userroles")]
+        public async Task<IActionResult> AddRolesToUser(UserRolesDTO userRolesDTO)
+        {
+            try
+            {
+                //get nameidentifier from token
+                //var nameIdentifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                await _accountBLL.AddRolesToUser(userRolesDTO);
+                return Ok("Roles added to user successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             try
             {
+
                 var accountDto = await _accountBLL.Login(loginDTO);
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, accountDto.Username));
                 var roles = await _accountBLL.GetRolesFromUser(accountDto.Username);
+
                 foreach (var role in roles)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role));
@@ -90,6 +108,8 @@ namespace MyBackendServices.Controllers
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                    SecurityAlgorithms.HmacSha256Signature)
                 };
+
+
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var userWithToken = new UserWithToken
                 {
@@ -108,5 +128,9 @@ namespace MyBackendServices.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        //how to implement MFA token with Microsoft Authenticator
+
+
     }
 }

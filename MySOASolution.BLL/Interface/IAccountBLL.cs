@@ -8,6 +8,7 @@ namespace MySOASolution.BLL.Interface
         Task<AccountDTO> Login(LoginDTO loginDTO);
         Task<Task> AddRole(RoleCreateDTO roleCreateDTO);
         Task<Task> AddUserToRole(UserRoleDTO userRoleDTO);
+        Task<Task> AddRolesToUser(UserRolesDTO userRolesDTO);
         Task<IEnumerable<string>> GetRolesFromUser(string username);
     }
 }

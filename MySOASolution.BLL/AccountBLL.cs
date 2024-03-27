@@ -26,6 +26,19 @@ namespace MySOASolution.BLL
             }
         }
 
+        public async Task<Task> AddRolesToUser(UserRolesDTO userRolesDTO)
+        {
+            try
+            {
+                await _accountDal.AddRolesToUser(userRolesDTO.Username, userRolesDTO.Roles);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<Task> AddUserToRole(UserRoleDTO userRoleDTO)
         {
             try

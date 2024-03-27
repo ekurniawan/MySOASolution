@@ -47,6 +47,24 @@ namespace MySOASolution.Data.DAL
             }
         }
 
+        public async Task<Task> AddRolesToUser(string username, List<string> roles)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(username);
+                if (user == null)
+                {
+                    throw new ArgumentException("User not found");
+                }
+                await _userManager.AddToRolesAsync(user, roles);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<Task> AddUserToRole(string username, string role)
         {
             try
