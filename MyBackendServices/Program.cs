@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyBackendServices.Helpers;
@@ -25,6 +26,8 @@ builder.Services.AddScoped<ISamuraiBLL, SamuraiBLL>();
 builder.Services.AddScoped<ISamurai, SamuraiDal>();
 builder.Services.AddScoped<IQuote, QuoteDal>();
 builder.Services.AddScoped<IQuoteBLL, QuoteBLL>();
+builder.Services.AddScoped<IAccount, AccountDal>();
+builder.Services.AddScoped<IAccountBLL, AccountBLL>();
 
 //fluent validation
 //builder.Services.AddScoped<IValidator<SamuraiCreateDTO>, SamuraiCreateDTOValidation>();
@@ -33,6 +36,13 @@ builder.Services.AddValidatorsFromAssemblyContaining<SamuraiCreateDTOValidation>
 
 //automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+//identity
+builder.Services.AddIdentity<AppIdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<SamuraiContext>()
+    .AddDefaultTokenProviders();
+
 
 //jwt token
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
